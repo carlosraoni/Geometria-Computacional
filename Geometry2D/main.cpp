@@ -6,21 +6,30 @@ using namespace geometry2d;
 
 int main( int argc, char** argv )
 {
+	int n;
 	double x, y;
+	vector<Point2D> poly;
+	PointInPolygonAlgorithm * alg = new CrossingNumberAlgorithm();
+	//PointInPolygonAlgorithm * alg = new WindingNumberAlgorithm();
 
-	cin >> x >> y;
-	Point2D p1(x, y);
+	while(cin >> n){
+		if(n == 0) break;
 
-	cin >> x >> y;
-	Point2D p2(x, y);
+		poly.clear();
+		for(int i=0; i<n; i++){
+			cin >> x >> y;
+			poly.push_back(Point2D(x, y));
+		}
 
-	cout << "p1 * p2 = " << p1 * p2 << endl;
+		cin >> x >> y;
+		Point2D p(x, y);
 
-	Point2D p3 = 5 * p1;
-	cout << "5 * p1  = " << "(" << p3.getX() << "," << p3.getY()  << ")" << endl;
-
-	p3 = p1 + p2;
-	cout << "p1 + p2 = " << "(" << p3.getX() << "," << p3.getY()  << ")" << endl;
+		if(alg->pointInPolygon(p, poly) == 1)
+			cout << "F" << endl;
+		else
+			cout << "T" << endl;
+	}
 
 	return 0;
 }
+

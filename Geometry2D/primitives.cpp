@@ -31,6 +31,13 @@ double angle(const Point2D & p1, const Point2D & p2){
 	return acos((p1 * p2) / (p1.norm() * p2.norm()));
 }
 
+double orientedAngle(const Point2D & p0, const Point2D & p1, const Point2D & p2){
+	double unsignedAngle = angle(vector2D(p0, p1), vector2D(p0, p2));
+	double area = doubleSignedTriangleArea(p0, p1, p2);
+
+	return (area < 0) ? -unsignedAngle: unsignedAngle;
+}
+
 double pseudoAngle(const Point2D & p1, const Point2D & p2){
 	return (1.0 - (p1 * p2)/(p1.norm() * p2.norm()));
 }
@@ -57,3 +64,4 @@ bool isLeft(const Point2D & p0, const Point2D & p1, const Point2D & p2){
 
 
 }
+
