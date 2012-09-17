@@ -11,7 +11,6 @@ namespace geometry2d{
 class PointInPolygonAlgorithm{
 
 public:
-
     virtual int pointInPolygon(const Point2D & p, const vector<Point2D> & polygon) = 0;
 
 };
@@ -19,7 +18,6 @@ public:
 class CrossingNumberAlgorithm : public PointInPolygonAlgorithm{
 
 public:
-
     int pointInPolygon(const Point2D & p, const vector<Point2D> & polygon);
 
 };
@@ -27,7 +25,6 @@ public:
 class WindingNumberAlgorithm : public PointInPolygonAlgorithm{
 
 public:
-
     int pointInPolygon(const Point2D & p, const vector<Point2D> & polygon);
 
 };

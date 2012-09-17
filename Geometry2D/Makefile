@@ -1,7 +1,7 @@
 CXX	:= g++
 CXXFLAGS := -g
 
-OBJECTS	:= primitives.o point2d.o point_in_polygon.o
+OBJECTS	:= primitives.o point2d.o point_in_polygon.o convex_hull.o
 
 all: geometry2D
 
@@ -16,6 +16,9 @@ point2d.o: point2d.cpp point2d.h
 
 point_in_polygon.o: point_in_polygon.cpp point_in_polygon.h
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c point_in_polygon.cpp -o point_in_polygon.o
+
+convex_hull.o: convex_hull.cpp convex_hull.h
+	$(CXX) $(INCLUDES) $(CXXFLAGS) -c convex_hull.cpp -o convex_hull.o
 
 clean :
 	rm -rf $(OBJECTS)

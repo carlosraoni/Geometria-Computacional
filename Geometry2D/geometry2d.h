@@ -4,6 +4,7 @@
 #include "point2d.h"
 #include "primitives.h"
 #include "point_in_polygon.h"
+#include "convex_hull.h"
 
 #endif
 
