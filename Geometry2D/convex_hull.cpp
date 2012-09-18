@@ -15,7 +15,11 @@ public:
 	}
 
 	bool operator()(const Point2D & p1, const Point2D & p2){
-		return isLeft(referencePoint, p1, p2);
+		double cp = doubleSignedTriangleArea(referencePoint, p1, p2);
+		if(fabs(cp) < EPS){
+			return squareDistance(referencePoint, p1) < squareDistance(referencePoint, p2);
+		}
+		return cp > 0.0;
 	}
 
 private:
@@ -24,36 +28,23 @@ private:
 
 vector<Point2D> GrahamScanAlgorithm::convexHull(vector<Point2D> & p){
 	int n = p.size();
-	int indexLeftBottom = 0;
 
+	int indexBottomLeft = 0;
 	for(int i=1; i<n; i++){
-		if(fabs(p[i].getX() - p[indexLeftBottom].getX()) < EPS){
-			if(p[i].getY() < p[indexLeftBottom].getY())
-				indexLeftBottom = i;
-		}
-		else if(p[i].getX() < p[indexLeftBottom].getX()){
-			indexLeftBottom = i;
-		}
+		if(p[i].getY() > p[indexBottomLeft].getY()) continue;
+		if(p[i].getY() < p[indexBottomLeft].getY() || p[i].getX() < p[indexBottomLeft].getX())
+			indexBottomLeft = i;
 	}
-	//cout << "LeftBottom: " << p[indexLeftBottom].toString() << endl;
-	swap(p[0], p[indexLeftBottom]);
-	sort(p.begin() + 1, p.end(), PolarAngleComparator(p[indexLeftBottom]));
-	//for(int i=0; i<n; i++){
-	//	cout << "p[" << i << "] = " << p[i].toString() << endl;
-	//}
+	swap(p[0], p[indexBottomLeft]);
+	sort(p.begin(), p.end(), PolarAngleComparator(p[0]));
 
 	vector<Point2D> convHull;
 	convHull.push_back(p[0]);
 	convHull.push_back(p[1]);
-	convHull.push_back(p[2]);
 
-	for(int i=3; i<n; i++){
-		int last = convHull.size() - 1;
-		int prevLast = last - 1;
-		while(!isLeft(convHull[prevLast], convHull[last], p[i])){
+	for(int i=2; i<n; i++){
+		while(convHull.size() >= 2 && !isLeft(*(convHull.end() - 2), *(convHull.end() - 1), p[i])){
 			convHull.pop_back();
-			last = convHull.size() - 1;
-			prevLast = last - 1;
 		}
 		convHull.push_back(p[i]);
 	}

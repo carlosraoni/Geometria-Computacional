@@ -19,6 +19,19 @@ const Point2D operator-(const Point2D & p1, const Point2D & p2){
 	return Point2D(p1.getX() - p2.getX(), p1.getY() - p2.getY());
 }
 
+bool operator<(const Point2D & p1, const Point2D & p2){
+	if(p1.getY() < p2.getY())
+		return true;
+	if(p2.getY() < p1.getY())
+		return false;
+	return p1.getX() < p2.getX();
+}
+
+bool operator==(const Point2D & p1, const Point2D & p2){
+	return fabs(p1.getX() - p2.getX()) < EPS && fabs(p1.getY() - p2.getY()) < EPS;
+}
+
+
 const Point2D vector2D(const Point2D & A, const Point2D & B){
 	return (B - A);
 }
@@ -60,6 +73,16 @@ Orientation orientation(const Point2D & p0, const Point2D & p1, const Point2D & 
 
 bool isLeft(const Point2D & p0, const Point2D & p1, const Point2D & p2){
 	return doubleSignedTriangleArea(p0, p1, p2) > 0.0;
+}
+
+double squareDistance(const Point2D & p1, const Point2D & p2){
+	double dx = p2.getX() - p1.getX();
+	double dy = p2.getY() - p1.getY();
+	return dx * dx + dy * dy;
+}
+
+bool collinear(const Point2D & p1, const Point2D & p2, const Point2D & p3){
+	return fabs(doubleSignedTriangleArea(p1, p2, p3)) < EPS;
 }
 
 
