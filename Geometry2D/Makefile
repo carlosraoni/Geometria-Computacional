@@ -3,10 +3,13 @@ CXXFLAGS := -g
 
 OBJECTS	:= primitives.o point2d.o point_in_polygon.o convex_hull.o
 
-all: geometry2D
+all: point_in_polygon_test convex_hull_test
 
-geometry2D: main.cpp $(OBJECTS)
-	$(CXX) $(OBJECTS) main.cpp -o geometry2D
+point_in_polygon_test: point_in_polygon_test.cpp $(OBJECTS)
+	$(CXX) $(OBJECTS) point_in_polygon_test.cpp -o point_in_polygon_test
+
+convex_hull_test: convex_hull_test.cpp $(OBJECTS)
+	$(CXX) $(OBJECTS) convex_hull_test.cpp -o convex_hull_test
 
 primitives.o: primitives.cpp primitives.h
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c primitives.cpp -o primitives.o
