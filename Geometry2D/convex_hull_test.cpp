@@ -22,15 +22,15 @@ int main( int argc, char** argv )
 			p.push_back(Point2D(x, y));
 		}
 
-		vector<Point2D> ch = alg->convexHull(p);
+		alg->convexHull(p);
 
 		printf("Region #%d:\n", ++iter);
-		printf("(%.1f,%.1f)", ch[0].getX(), ch[0].getY());
+		printf("(%.1f,%.1f)", p[0].getX(), p[0].getY());
 		double perimeter = 0.0;
-		for(int i=ch.size() - 1; i >= 0; i--){
-			perimeter += (ch[(i+1)%ch.size()] - ch[i]).norm();
+		for(int i=p.size() - 1; i >= 0; i--){
+			perimeter += (p[(i+1)%p.size()] - p[i]).norm();
 
-			printf("-(%.1f,%.1f)", ch[i].getX(), ch[i].getY());
+			printf("-(%.1f,%.1f)", p[i].getX(), p[i].getY());
 		}
 		printf("\n");
 		printf("Perimeter length = %.2f\n", perimeter);

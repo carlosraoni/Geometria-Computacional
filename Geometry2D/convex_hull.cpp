@@ -26,7 +26,7 @@ private:
 	Point2D referencePoint;
 };
 
-vector<Point2D> GrahamScanAlgorithm::convexHull(vector<Point2D> & p){
+void GrahamScanAlgorithm::convexHull(vector<Point2D> & p){
 	int n = p.size();
 
 	int indexBottomLeft = 0;
@@ -38,24 +38,17 @@ vector<Point2D> GrahamScanAlgorithm::convexHull(vector<Point2D> & p){
 	swap(p[0], p[indexBottomLeft]);
 	sort(p.begin(), p.end(), PolarAngleComparator(p[0]));
 
-	vector<Point2D> convHull;
-	convHull.push_back(p[0]);
-	convHull.push_back(p[1]);
-
+	int convHullSize = 2;
 	for(int i=2; i<n; i++){
-		while(convHull.size() >= 2 && !isLeft(*(convHull.end() - 2), *(convHull.end() - 1), p[i])){
-			convHull.pop_back();
+		while(convHullSize >= 2 && !isLeft(p[convHullSize - 2], p[convHullSize - 1], p[i])){
+			convHullSize--;
 		}
-		convHull.push_back(p[i]);
+		p[convHullSize++] = p[i];
 	}
-
-	return convHull;
+	p.resize(convHullSize);
 }
 
-vector<Point2D> DivideAndConquerConvexHullAlgorithm::convexHull(vector<Point2D> & p){
-	vector<Point2D> ch;
-
-	return ch;
+void DivideAndConquerConvexHullAlgorithm::convexHull(vector<Point2D> & p){
 }
 
 }
