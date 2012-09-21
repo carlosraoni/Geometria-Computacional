@@ -10,7 +10,8 @@ int main( int argc, char** argv )
 	int n, iter = 0;
 	double x, y;
 	vector<Point2D> p;
-	ConvexHullAlgorithm * alg = new GrahamScanAlgorithm();
+	//ConvexHullAlgorithm * alg = new GrahamScanAlgorithm();
+	ConvexHullAlgorithm * alg = new DivideAndConquerConvexHullAlgorithm();
 
 	while(cin >> n){
 		if(n == 0) break;
