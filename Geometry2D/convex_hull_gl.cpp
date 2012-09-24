@@ -130,11 +130,13 @@ void addNewPoint(int x, int y){
 }
 
 void runGrahamScan(){
+	if(p.size() < 2) return;
 	ch = p;
 	graham.convexHull(ch);
 }
 
 void runDivideAndConquer(){
+	if(p.size() < 2) return;
 	ch = p;
 	divideAndConquer.convexHull(ch);
 }
