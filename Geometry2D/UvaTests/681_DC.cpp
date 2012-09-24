@@ -204,6 +204,14 @@ void convexHull(vector<Point2D> & p){
 	p.insert(p.begin(),ret.begin(), ret.end());
 }
 
+const long long NOISE_MIN = 10e7;
+const long long NOISE_MAX = 10e9;
+
+double getNoise(){
+	long long n = ((rand() + NOISE_MIN) % NOISE_MAX) + 1;
+	return (1.0) / n;
+}
+
 int main( int argc, char** argv )
 {
 	int n, niter;
@@ -219,7 +227,8 @@ int main( int argc, char** argv )
 		p.clear();
 		for(int i=0; i<n; i++){
 			cin >> x >> y;
-			p.push_back(Point2D(x, y));
+			double noise = getNoise();
+			p.push_back(Point2D(x + noise, y + noise));
 		}
 
 		convexHull(p);
