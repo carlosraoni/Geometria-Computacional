@@ -1,15 +1,19 @@
 CXX	:= g++
 CXXFLAGS := -g
+LIBGL=-lGL -lGLU -lglut
 
 OBJECTS	:= primitives.o point2d.o point_in_polygon.o convex_hull.o
 
-all: point_in_polygon_test convex_hull_test
+all: point_in_polygon_test convex_hull_test convex_hull_gl
 
 point_in_polygon_test: point_in_polygon_test.cpp $(OBJECTS)
 	$(CXX) $(OBJECTS) point_in_polygon_test.cpp -o point_in_polygon_test
 
 convex_hull_test: convex_hull_test.cpp $(OBJECTS)
 	$(CXX) $(OBJECTS) convex_hull_test.cpp -o convex_hull_test
+
+convex_hull_gl: convex_hull_gl.cpp $(OBJECTS)
+	$(CXX) -o glGUI/convex_hull_gl convex_hull_gl.cpp $(LIBGL) $(OBJECTS)
 
 primitives.o: primitives.cpp primitives.h
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c primitives.cpp -o primitives.o

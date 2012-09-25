@@ -14,6 +14,8 @@
 using namespace std;
 using namespace geometry2d;
 
+typedef enum{GRAHAM_SCAN, DIVIDE_AND_CONQUER} CH_ALGORITHM;
+
 /* The number of our GLUT window */
 int window;
 
@@ -119,6 +121,7 @@ void DrawGLScene()
 // Algoritmos de convex hull
 GrahamScanAlgorithm graham;
 DivideAndConquerConvexHullAlgorithm divideAndConquer;
+ConvexHullAlgorithm * defaultAlgorithm;
 
 void generateRandomPoint(){
 	double noise = 1.0 / (rand() + 1.0);
@@ -203,6 +206,34 @@ void onClick(int button, int state, int x, int y){
 int main(int argc, char **argv)
 {
 	srand(time(0));
+
+	cout << "--- Convex Hull Tests How to Use ---" << endl << endl;
+	cout << "Mouse Actions: " << endl << endl;
+	cout << "\t Left Click   - Generate Point on Click Position" << endl;
+	cout << "\t Right Click  - Run default Convex Hull Algorithm" << endl;
+	cout << "\t Middle Click - Clear" << endl << endl;
+
+	cout << "Keyboard Actions: " << endl << endl;
+	cout << "\t P - Generate Random Point" << endl;
+	cout << "\t G - Run Graham Scan" << endl;
+	cout << "\t D - Run Divide and Conquer" << endl;
+	cout << "\t C - Clear" << endl << endl;
+
+	cout << "Choose the default Convex Hull Algorithm: " << endl;
+	cout << "\t 0 - Graham Scan" << endl;
+	cout << "\t 1 - Divide and Conquer" << endl;
+
+	int option;
+	cin >> option;
+
+	if(option == GRAHAM_SCAN){
+		cout << endl << "Using Graham Scan as default algorithm" << endl;
+		defaultAlgorithm = &graham;
+	}
+	else{
+		cout << endl << "Using Divide and Conquer as default algorithm" << endl;
+		defaultAlgorithm = &divideAndConquer;
+	}
 
   	/* Initialize GLUT state - glut will take any command line arguments that pertain to it or
      X Windows - look at its documentation at http://reality.sgi.com/mjk/spec3/spec3.html */
