@@ -219,7 +219,7 @@ const long long NOISE_MIN = 10e7;
 const long long NOISE_MAX = 10e9;
 
 double getNoise(){
-	long long n = ((rand() + NOISE_MIN) % NOISE_MAX) + 1;
+	long long n = (rand() % (NOISE_MAX - NOISE_MIN)) + NOISE_MIN;
 	return (1.0) / n;
 }
 

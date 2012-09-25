@@ -14,7 +14,7 @@
 using namespace std;
 using namespace geometry2d;
 
-typedef enum{GRAHAM_SCAN, DIVIDE_AND_CONQUER} CH_ALGORITHM;
+typedef enum{GRAHAM_SCAN, DIVIDE_AND_CONQUER} CONVEX_HULL_ALGORITHM;
 
 /* The number of our GLUT window */
 int window;
@@ -138,6 +138,12 @@ void runGrahamScan(){
 	graham.convexHull(ch);
 }
 
+void runDefaultAlgorithm(){
+	if(p.size() < 2) return;
+	ch = p;
+	defaultAlgorithm->convexHull(ch);
+}
+
 void runDivideAndConquer(){
 	if(p.size() < 2) return;
 	ch = p;
@@ -194,8 +200,7 @@ void onClick(int button, int state, int x, int y){
 			addNewPoint(x, y);
 			break;
 		case GLUT_RIGHT_BUTTON:
-			//runDivideAndConquer();
-			runGrahamScan();
+			runDefaultAlgorithm();
 			break;
 		case GLUT_MIDDLE_BUTTON:
 			clearAll();
