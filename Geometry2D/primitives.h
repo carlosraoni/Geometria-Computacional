@@ -2,7 +2,10 @@
 #define PRIMITIVES_H
 
 #include <cmath>
+#include <vector>
 #include "point2d.h"
+
+using namespace std;
 
 namespace geometry2d{
 
@@ -44,6 +47,8 @@ bool isLeft(const Point2D & p0, const Point2D & p1, const Point2D & p2);
 double squareDistance(const Point2D & p1, const Point2D & p2);
 
 bool collinear(const Point2D & p1, const Point2D & p2, const Point2D & p3);
+
+void polarAngleSort(vector<Point2D> & p);
 
 }
 

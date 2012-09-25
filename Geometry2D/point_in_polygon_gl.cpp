@@ -14,13 +14,16 @@
 using namespace std;
 using namespace geometry2d;
 
-typedef enum{GRAHAM_SCAN, DIVIDE_AND_CONQUER} CONVEX_HULL_ALGORITHM;
+typedef enum{CROSSING_NUMBER, WINDING_NUMBER} POINT_IN_POLYGON_ALGORITHM;
+typedef enum{POLYGON_EDIT, POINT_IN_POLYGON_TEST} PROGRAM_MODE;
 
 /* The number of our GLUT window */
 int window;
 
 const int X_SIZE = 640;
 const int Y_SIZE = 480;
+
+PROGRAM_MODE mode = POLYGON_EDIT;
 
 /* A general OpenGL initialization function.  Sets all of the initial parameters. */
 void InitGL(int Width, int Height)	        // We call this right after our OpenGL window is created.
@@ -63,10 +66,11 @@ void resetColor(){
 	glColor3f(1.0, 1.0, 1.0);
 }
 
-// Pontos a serem exibidos
+// Pontos do poligono
+vector<Point2D> polygon;
+
+// Pontos de teste
 vector<Point2D> p;
-// Convex Hull de p
-vector<Point2D> ch;
 
 void drawPolygon(const vector<Point2D> & poli){
 	int n = poli.size();
@@ -75,18 +79,22 @@ void drawPolygon(const vector<Point2D> & poli){
 	glBegin(GL_LINE_STRIP);				// start drawing a polygon
 	for(int i = 0; i < n; i++)
 		glVertex2f( poli[i].getX(), poli[i].getY());		// Top
-	glVertex2f( poli[0].getX(), poli[0].getY());
+	if(mode == POINT_IN_POLYGON_TEST)
+		glVertex2f( poli[0].getX(), poli[0].getY());
 	glEnd();					// we're done with the polygon
 
 	resetColor();
 }
 
-void drawPoints(){
+void drawPoints(const vector<Point2D> & p, bool polygonPoints){
 	int n = p.size();
 	if(n == 0) return;
 
 	glBegin(GL_POINTS);
-	glColor3f(1.0, 0.0, 0.0);
+	if(polygonPoints)
+		glColor3f(1.0, 0.0, 0.0);
+	else
+		glColor3f(0.0, 0.0, 1.0);
 	for(int i=0; i<n; i++)
  		glVertex2f(p[i].getX(), p[i].getY());
  	glEnd();
@@ -111,48 +119,63 @@ void DrawGLScene()
  	glClearColor(.3, .3, .3, 0);
  	glClear(GL_COLOR_BUFFER_BIT);
 
-	drawPoints();
-	drawPolygon(ch);
+	drawPoints(polygon, true);
+	drawPolygon(polygon);
+	if(mode == POINT_IN_POLYGON_TEST)
+		drawPoints(p, false);
 
   	// swap buffers to display, since we're double buffered.
   	glutSwapBuffers();
 }
 
 // Algoritmos de convex hull
-GrahamScanAlgorithm graham;
-DivideAndConquerConvexHullAlgorithm divideAndConquer;
-ConvexHullAlgorithm * defaultAlgorithm;
+PointInPolygonAlgorithm * defaultAlgorithm;
+CrossingNumberAlgorithm crossingNumber;
+WindingNumberAlgorithm windingNumber;
 
-void generateRandomPoint(){
-	double noise = 1.0 / (rand() + 1.0);
-	p.push_back(Point2D((rand() % X_SIZE) - noise, (rand() % Y_SIZE) - noise));
+void addNewPointToPolygon(int x, int y){
+	cout << "Adding Point (" << x  << "," << y << ") to Polygon" << endl;
+	polygon.push_back(Point2D(x, y));
 }
 
-void addNewPoint(int x, int y){
-	p.push_back(Point2D(x, y));
+Point2D addNewPointToTestingPoints(int x, int y){
+	Point2D point(x, y);
+	p.push_back(point);
+	return point;
 }
 
-void runGrahamScan(){
-	if(p.size() < 2) return;
-	ch = p;
-	graham.convexHull(ch);
-}
+void runDefaultAlgorithm(int x, int y){
+	if(polygon.size() < 3) return;
 
-void runDefaultAlgorithm(){
-	if(p.size() < 2) return;
-	ch = p;
-	defaultAlgorithm->convexHull(ch);
-}
+	Point2D point = addNewPointToTestingPoints(x, y);
 
-void runDivideAndConquer(){
-	if(p.size() < 2) return;
-	ch = p;
-	divideAndConquer.convexHull(ch);
+	int ret = defaultAlgorithm->pointInPolygon(point, polygon);
+	if(ret < 0){
+		cout << "Point (" << point.getX() << "," << point.getY() << ") INSIDE Polygon" << endl;
+	}
+	else if(ret > 0){
+		cout << "Point (" << point.getX() << "," << point.getY() << ") OUTSIDE Polygon" << endl;
+	}
+	else{
+		cout << "Point (" << point.getX() << "," << point.getY() << ") ON FRONTIER of Polygon" << endl;
+	}
 }
 
 void clearAll(){
+	cout << "Clear All" << endl;
+	polygon.clear();
 	p.clear();
-	ch.clear();
+	mode = POLYGON_EDIT;
+}
+
+void useCrossingNumberAlgorithm(){
+	cout << endl << "Using Crossing Number Algorithm" << endl;
+	defaultAlgorithm = &crossingNumber;
+}
+
+void useWindingNumberAlgorithm(){
+	cout << endl << "Using Winding Number Algorithm" << endl;
+	defaultAlgorithm = &windingNumber;
 }
 
 /* The function called whenever a key is pressed. */
@@ -165,14 +188,11 @@ void keyPressed(unsigned char key, int x, int y)
 		case 'c':
 			clearAll();
 			break;
-		case 'p':
-			generateRandomPoint();
+		case 'n':
+			useCrossingNumberAlgorithm();
 			break;
-		case 'g':
-			runGrahamScan();
-			break;
-		case 'd':
-			runDivideAndConquer();
+		case 'w':
+			useWindingNumberAlgorithm();
 			break;
 	}
 
@@ -186,6 +206,13 @@ void keyPressed(unsigned char key, int x, int y)
 	}
 }
 
+void startPointInPolygonTests(){
+	//polarAngleSort(polygon);
+	cout << "Polygon Edit Finished" << endl;
+	cout << "Starting Point in Polygon Tests" << endl;
+	mode = POINT_IN_POLYGON_TEST;
+}
+
 void onClick(int button, int state, int x, int y){
 	//GLUT_DOWN – When mouse button is pressed
 	//GLUT_UP – When mouse button is released
@@ -197,10 +224,15 @@ void onClick(int button, int state, int x, int y){
 	// GLUT_MIDDLE_BUTTON – when middle mouse button click is detected
 	switch(button){
 		case GLUT_LEFT_BUTTON:
-			addNewPoint(x, y);
+			if(mode == POLYGON_EDIT)
+				addNewPointToPolygon(x, y);
+			else
+				runDefaultAlgorithm(x, y);
 			break;
 		case GLUT_RIGHT_BUTTON:
-			runDefaultAlgorithm();
+			if(mode == POLYGON_EDIT && polygon.size() >= 3){
+				startPointInPolygonTests();
+			}
 			break;
 		case GLUT_MIDDLE_BUTTON:
 			clearAll();
@@ -212,33 +244,33 @@ int main(int argc, char **argv)
 {
 	srand(time(0));
 
-	cout << "--- Convex Hull Tests How to Use ---" << endl << endl;
+	cout << "--- Point In Polygon Tests How to Use ---" << endl << endl;
 	cout << "Mouse Actions: " << endl << endl;
-	cout << "\t Left Click   - Generate Point on Click Position" << endl;
-	cout << "\t Right Click  - Run default Convex Hull Algorithm" << endl;
-	cout << "\t Middle Click - Clear" << endl << endl;
+	cout << "\t Left Click (POLYGON_EDIT MODE) - Generate Polygon Point on Click Position" << endl;
+	cout << "\t Left Click (POINT_IN_POLYGON_TEST MODE) - Runs Point In Polygon Algorithm on Point Click Position" << endl;
+	cout << "\t Right Click - Change Mode from POLYGON_EDIT to POINT_IN_POLYGON_TEST" << endl;
+	cout << "\t Middle Click - Clear Points and Restart POLYGON_EDIT MODE" << endl << endl;
 
 	cout << "Keyboard Actions: " << endl << endl;
-	cout << "\t P - Generate Random Point" << endl;
-	cout << "\t G - Run Graham Scan" << endl;
-	cout << "\t D - Run Divide and Conquer" << endl;
-	cout << "\t C - Clear" << endl;
+	cout << "\t C - Clear Points and Restart POLYGON_EDIT MODE" << endl;
+	cout << "\t N - Change Algorithm to Crossing Number" << endl;
+	cout << "\t W - Change Algorithm to Winding Number" << endl;
 	cout << "\t ESC - Exit Program" << endl << endl;
 
-	cout << "Choose the default Convex Hull Algorithm: " << endl;
-	cout << "\t 0 - Graham Scan" << endl;
-	cout << "\t 1 - Divide and Conquer" << endl;
+	cout << "Choose the Point in Polygon Algorithm to Test: " << endl;
+	cout << "\t 0 - Crossing Number" << endl;
+	cout << "\t 1 - Winding Number" << endl;
 
 	int option;
 	cin >> option;
 
-	if(option == GRAHAM_SCAN){
-		cout << endl << "Using Graham Scan as default algorithm" << endl;
-		defaultAlgorithm = &graham;
+	if(option == CROSSING_NUMBER){
+		cout << endl << "Using Crossing Number Algorithm" << endl;
+		defaultAlgorithm = &crossingNumber;
 	}
 	else{
-		cout << endl << "Using Divide and Conquer as default algorithm" << endl;
-		defaultAlgorithm = &divideAndConquer;
+		cout << endl << "Using Winding Number Algorithm" << endl;
+		defaultAlgorithm = &windingNumber;
 	}
 
   	/* Initialize GLUT state - glut will take any command line arguments that pertain to it or
@@ -259,7 +291,7 @@ int main(int argc, char **argv)
   	glutInitWindowPosition(0, 0);
 
   	/* Open a window */
-  	window = glutCreateWindow("Convex Hull Algorithm Tests");
+  	window = glutCreateWindow("Point In Polygon Algorithm Tests");
 
   	/* Register the function to do all our OpenGL drawing. */
   	glutDisplayFunc(&DrawGLScene);
