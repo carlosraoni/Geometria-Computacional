@@ -1,4 +1,5 @@
 #include <cmath>
+#include <algorithm>
 #include "primitives.h"
 
 namespace geometry2d{
@@ -73,6 +74,10 @@ Orientation orientation(const Point2D & p0, const Point2D & p1, const Point2D & 
 
 bool isLeft(const Point2D & p0, const Point2D & p1, const Point2D & p2){
 	return doubleSignedTriangleArea(p0, p1, p2) > 0.0;
+}
+
+bool inTriangle(const Point2D & p0, const Point2D & p1, const Point2D & p2, const Point2D & p){
+	return isLeft(p0, p1, p) && isLeft(p1, p2, p) && isLeft(p2, p0, p);
 }
 
 double squareDistance(const Point2D & p1, const Point2D & p2){

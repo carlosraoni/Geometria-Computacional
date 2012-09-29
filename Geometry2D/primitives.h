@@ -44,6 +44,8 @@ Orientation orientation(const Point2D & p0, const Point2D & p1, const Point2D & 
 
 bool isLeft(const Point2D & p0, const Point2D & p1, const Point2D & p2);
 
+bool inTriangle(const Point2D & p0, const Point2D & p1, const Point2D & p2, const Point2D & p);
+
 double squareDistance(const Point2D & p1, const Point2D & p2);
 
 bool collinear(const Point2D & p1, const Point2D & p2, const Point2D & p3);

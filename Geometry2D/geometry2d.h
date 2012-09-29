@@ -5,6 +5,7 @@
 #include "primitives.h"
 #include "point_in_polygon.h"
 #include "convex_hull.h"
+#include "triangulation.h"
 
 #endif
 
