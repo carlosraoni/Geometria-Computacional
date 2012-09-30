@@ -1,13 +1,13 @@
 CXX	:= g++
 CXXFLAGS := -g
-LIBGL=lib\glut32.lib -lopengl32 -lglu32 -lglut32 -D_STDCALL_SUPPORTED -D_M_IX86 -I.
+LIBGL=lib\glut32.lib -lopengl32 -lglu32 -D_STDCALL_SUPPORTED -D_M_IX86 -I.
 
 SRCDIR=src
 BINDIR=bin
 GLGUIDIR=bin\glGUI
 
 OBJECTS:=primitives.o point2d.o point_in_polygon.o convex_hull.o triangulation.o
-OBJECTSBIN:=$(BINDIR)\*.o
+OBJECTSBIN:=$(BINDIR)\primitives.o $(BINDIR)\point2d.o $(BINDIR)\point_in_polygon.o $(BINDIR)\convex_hull.o $(BINDIR)\triangulation.o
 
 all: convex_hull_gl point_in_polygon_gl triangulation_gl
 

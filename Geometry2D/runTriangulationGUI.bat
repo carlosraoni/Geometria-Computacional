@@ -1,6 +1,6 @@
 @echo off
 
-set program="bin\glGUI\point_in_polygon_gl.exe"
+set program="bin\glGUI\triangulation_gl.exe"
 
 if exist %program% (
 	.\%program%
