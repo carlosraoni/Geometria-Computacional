@@ -2,39 +2,38 @@ CXX	:= g++
 CXXFLAGS := -g
 LIBGL=-lGL -lGLU -lglut
 
-OBJECTS	:= primitives.o point2d.o point_in_polygon.o convex_hull.o triangulation.o
+SRCDIR=src
+BINDIR=bin
+GLGUIDIR=bin/glGUI
 
-all: point_in_polygon_test convex_hull_test convex_hull_gl point_in_polygon_gl triangulation_gl
+OBJECTS:=primitives.o point2d.o point_in_polygon.o convex_hull.o triangulation.o
+OBJECTSBIN:=$(BINDIR)/*.o
 
-convex_hull_gl: convex_hull_gl.cpp $(OBJECTS)
-	$(CXX) -o glGUI/convex_hull_gl convex_hull_gl.cpp $(LIBGL) $(OBJECTS)
+all: convex_hull_gl point_in_polygon_gl triangulation_gl
 
-point_in_polygon_gl: point_in_polygon_gl.cpp $(OBJECTS)
-	$(CXX) -o glGUI/point_in_polygon_gl point_in_polygon_gl.cpp $(LIBGL) $(OBJECTS)
+convex_hull_gl: $(SRCDIR)/convex_hull_gl.cpp $(OBJECTS)
+	$(CXX) -o $(GLGUIDIR)/convex_hull_gl $(SRCDIR)/convex_hull_gl.cpp $(LIBGL) $(OBJECTSBIN)
 
-triangulation_gl: triangulation_gl.cpp $(OBJECTS)
-	$(CXX) -o glGUI/triangulation_gl triangulation_gl.cpp $(LIBGL) $(OBJECTS)
+point_in_polygon_gl: $(SRCDIR)/point_in_polygon_gl.cpp $(OBJECTS)
+	$(CXX) -o $(GLGUIDIR)/point_in_polygon_gl $(SRCDIR)/point_in_polygon_gl.cpp $(LIBGL) $(OBJECTSBIN)
 
-point_in_polygon_test: point_in_polygon_test.cpp $(OBJECTS)
-	$(CXX) $(OBJECTS) point_in_polygon_test.cpp -o point_in_polygon_test
+triangulation_gl: $(SRCDIR)/triangulation_gl.cpp $(OBJECTS)
+	$(CXX) -o $(GLGUIDIR)/triangulation_gl $(SRCDIR)/triangulation_gl.cpp $(LIBGL) $(OBJECTSBIN)
 
-convex_hull_test: convex_hull_test.cpp $(OBJECTS)
-	$(CXX) $(OBJECTS) convex_hull_test.cpp -o convex_hull_test
+primitives.o: $(SRCDIR)/primitives.cpp $(SRCDIR)/primitives.h
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/primitives.cpp -o $(BINDIR)/primitives.o
 
-primitives.o: primitives.cpp primitives.h
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -c primitives.cpp -o primitives.o
+point2d.o: $(SRCDIR)/point2d.cpp $(SRCDIR)/point2d.h
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/point2d.cpp -o $(BINDIR)/point2d.o
 
-point2d.o: point2d.cpp point2d.h
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -c point2d.cpp -o point2d.o
+point_in_polygon.o: $(SRCDIR)/point_in_polygon.cpp $(SRCDIR)/point_in_polygon.h
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/point_in_polygon.cpp -o $(BINDIR)/point_in_polygon.o
 
-point_in_polygon.o: point_in_polygon.cpp point_in_polygon.h
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -c point_in_polygon.cpp -o point_in_polygon.o
+convex_hull.o: $(SRCDIR)/convex_hull.cpp $(SRCDIR)/convex_hull.h
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/convex_hull.cpp -o $(BINDIR)/convex_hull.o
 
-convex_hull.o: convex_hull.cpp convex_hull.h
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -c convex_hull.cpp -o convex_hull.o
-
-triangulation.o: triangulation.cpp triangulation.h
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -c triangulation.cpp -o triangulation.o
+triangulation.o: $(SRCDIR)/triangulation.cpp $(SRCDIR)/triangulation.h
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/triangulation.cpp -o $(BINDIR)/triangulation.o
 
 clean :
-	rm -rf $(OBJECTS)
+	rm -rf $(OBJECTSBIN)
