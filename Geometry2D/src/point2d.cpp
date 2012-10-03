@@ -8,6 +8,7 @@
 namespace geometry2d
 {
 
+// Definição de constante que representa o vetor i = (1,0)
 const Point2D ei(1,0);
 
 Point2D::Point2D() : m_x(0.0), m_y(0.0)

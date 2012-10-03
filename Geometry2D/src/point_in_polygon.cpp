@@ -54,15 +54,17 @@ int WindingNumberAlgorithm::pointInPolygon(const Point2D & p, const vector<Point
 	int n = polygon.size();
 	double wn = 0.0;
 
+	// Cálculo do índice de rotação
 	for(int i=0; i<n; i++){
 		int next = (i + 1) % n;
 		wn += orientedAngle(p, polygon[i], polygon[next]);
 	}
 	wn /= (2.0 * PI);
 
+	// Se índice de rotação igual a zero retorna que ponto está fora do polígono
 	if(fabs(wn) < EPS)
 		return 1;
-
+	// Caso contrário, retorna que ponto está no interior do polígono
     return -1;
 }
 

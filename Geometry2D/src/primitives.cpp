@@ -4,6 +4,8 @@
 
 namespace geometry2d{
 
+// Implementações das primitivas geométricas
+
 const Point2D operator*(double c, const Point2D p){
 	return Point2D(c * p.getX(), c * p.getY());
 }
@@ -90,6 +92,7 @@ bool collinear(const Point2D & p1, const Point2D & p2, const Point2D & p3){
 	return fabs(doubleSignedTriangleArea(p1, p2, p3)) < EPS;
 }
 
+// Classe que encapsula comparação do ângulo polar dos pontos com o ponto de referência
 class PolarAngleComparator{
 public:
 	PolarAngleComparator(Point2D & p){
@@ -110,13 +113,14 @@ private:
 
 void polarAngleSort(vector<Point2D> & p){
 	int n = p.size();
-
+	// Determina índice do ponto mais abaixo e a esquerda
 	int indexBottomLeft = 0;
 	for(int i=1; i<n; i++){
 		if(p[i].getY() > p[indexBottomLeft].getY()) continue;
 		if(p[i].getY() < p[indexBottomLeft].getY() || p[i].getX() < p[indexBottomLeft].getX())
 			indexBottomLeft = i;
 	}
+	// Realiza ordenação polar
 	swap(p[0], p[indexBottomLeft]);
 	sort(p.begin(), p.end(), PolarAngleComparator(p[0]));
 }
