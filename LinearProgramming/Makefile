@@ -2,39 +2,28 @@ CXX	:= g++
 CXXFLAGS := -g
 LIBGL=-lGL -lGLU -lglut
 
-SRCDIR=src
-BINDIR=bin
-GLGUIDIR=bin/glGUI
+OBJECTS:=constraint2d.o linear_program2d.o lp2d_reader.o lp2d_solver.o
 
-OBJECTS:=primitives.o point2d.o point_in_polygon.o convex_hull.o triangulation.o
-OBJECTSBIN:=$(BINDIR)/*.o
+all: linearProgramming linearProgrammingGl
 
-all: convex_hull_gl point_in_polygon_gl triangulation_gl
+linearProgrammingGl: linearProgrammingGl.cpp $(OBJECTS)
+	$(CXX) -o lpGl linearProgrammingGl.cpp $(LIBGL) $(OBJECTS)
 
-convex_hull_gl: $(SRCDIR)/convex_hull_gl.cpp $(OBJECTS)
-	$(CXX) -o $(GLGUIDIR)/convex_hull_gl $(SRCDIR)/convex_hull_gl.cpp $(LIBGL) $(OBJECTSBIN)
+linearProgramming: linearProgramming.cpp $(OBJECTS)
+	$(CXX) -o lp linearProgramming.cpp $(OBJECTS)
 
-point_in_polygon_gl: $(SRCDIR)/point_in_polygon_gl.cpp $(OBJECTS)
-	$(CXX) -o $(GLGUIDIR)/point_in_polygon_gl $(SRCDIR)/point_in_polygon_gl.cpp $(LIBGL) $(OBJECTSBIN)
+constraint2d.o: constraint2d.cpp constraint2d.h
+	$(CXX) $(CXXFLAGS) -c constraint2d.cpp -o constraint2d.o
 
-triangulation_gl: $(SRCDIR)/triangulation_gl.cpp $(OBJECTS)
-	$(CXX) -o $(GLGUIDIR)/triangulation_gl $(SRCDIR)/triangulation_gl.cpp $(LIBGL) $(OBJECTSBIN)
+linear_program2d.o: linear_program2d.cpp linear_program2d.h
+	$(CXX) $(CXXFLAGS) -c linear_program2d.cpp -o linear_program2d.o
 
-primitives.o: $(SRCDIR)/primitives.cpp $(SRCDIR)/primitives.h
-	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/primitives.cpp -o $(BINDIR)/primitives.o
+lp2d_reader.o: lp2d_reader.cpp lp2d_reader.h
+	$(CXX) $(CXXFLAGS) -c lp2d_reader.cpp -o lp2d_reader.o
 
-point2d.o: $(SRCDIR)/point2d.cpp $(SRCDIR)/point2d.h
-	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/point2d.cpp -o $(BINDIR)/point2d.o
-
-point_in_polygon.o: $(SRCDIR)/point_in_polygon.cpp $(SRCDIR)/point_in_polygon.h
-	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/point_in_polygon.cpp -o $(BINDIR)/point_in_polygon.o
-
-convex_hull.o: $(SRCDIR)/convex_hull.cpp $(SRCDIR)/convex_hull.h
-	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/convex_hull.cpp -o $(BINDIR)/convex_hull.o
-
-triangulation.o: $(SRCDIR)/triangulation.cpp $(SRCDIR)/triangulation.h
-	$(CXX) $(CXXFLAGS) -c $(SRCDIR)/triangulation.cpp -o $(BINDIR)/triangulation.o
+lp2d_solver.o: lp2d_solver.cpp lp2d_solver.h
+	$(CXX) $(CXXFLAGS) -c lp2d_solver.cpp -o lp2d_solver.o
 
 clean :
-	rm -rf $(OBJECTSBIN)
+	rm -rf $(OBJECTS)
 
