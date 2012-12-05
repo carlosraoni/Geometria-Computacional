@@ -5,5 +5,6 @@
 #include "constraint2d.h"
 #include "linear_program2d.h"
 #include "lp2d_solver.h"
+#include "lp2d_reader.h"
 
 #endif // LP2D_H
