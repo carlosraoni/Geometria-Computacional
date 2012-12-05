@@ -183,6 +183,9 @@ LinearProgramResult solveLinearProgram2D(const LinearProgram2D * lp, double & op
 
 	printf("\n\t\tOptimum Found (%lf, %lf) = %lf\n", currX, currY, opt);
 
+	optX = currX;
+	optY = currY;
+
 	delete boundXConstr;
 	delete boundYConstr;
 
