@@ -15,6 +15,10 @@ LinearProgram2D * readLinearProgram2D(const char * file){
 	double a[DIM], b;
 	ifstream in(file);
 
+	cout << endl << "Reading file: " << file << endl << endl;
+	if(!in.is_open())
+		return NULL;
+
 	in >> type >> c[0] >> c[1];
 	lp = new LinearProgram2D(c[0], c[1], (type == "MAX") ? MAX: MIN);
 

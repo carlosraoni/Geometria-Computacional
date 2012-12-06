@@ -289,14 +289,30 @@ void onClick(int button, int state, int x, int y){
 
 int main(int argc, char **argv)
 {
+	string inputFile;
+
 	if(argc < 2){
-		cout << "Error: Please specify the linear program descriptor file" << endl;
+		cout << "Please specify the linear program descriptor file: " << endl;
+		cin >> inputFile;
+	}
+	else{
+		inputFile = string(argv[1]);
+	}
+
+	lp = readLinearProgram2D(inputFile.c_str());
+
+	if(lp == NULL){
+		cout << "Error: impossible to read file '" << inputFile << "'"<< endl;
 		return 1;
 	}
 
-	lp = readLinearProgram2D(argv[1]);
-
 	solveLinearProgram2D(lp, optX, optY, optZ);
+
+	cout << endl << endl << "------------------ How to Use ------------------ " << endl;
+	cout << endl << "Use arrow keys to change camera position" << endl << endl;
+	cout << "Use key 'i' to Zoom-In" << endl;
+	cout << "Use key 'o' to Zoom-Out" << endl << endl;
+	cout << "------------------------------------------------ " << endl;
 
 	srand(time(0));
 
