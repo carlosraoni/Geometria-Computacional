@@ -75,6 +75,11 @@ bool updateLimits(const Constraint2D * c, const Constraint2D * test, double xInt
 		xLeft = (xLeft > xInter) ? xLeft: xInter;
 	}
 
+	cout << "New Bounds [" << xLeft << ", " << xRight << "]" << endl;
+	if(xLeft > xRight){
+		cout << "Infeasible Bounds Detected [" << xLeft << ", " << xRight << "]!" << endl;
+	}
+
 	return xLeft < xRight;
 }
 
@@ -90,6 +95,10 @@ void initializeBounds(const Constraint2D * bx, const Constraint2D * by, const Co
 	calcBoundConstraintIntersection(c, by, false, xInter, yInter);
 	printf("by inter %lf %lf\n", xInter, yInter);
 	updateLimits(c, by, xInter, yInter, xLeft, xRight);
+
+	if(xLeft > xRight){
+		cout << "Initial Bound Infeasible [" << xLeft << ", " << xRight << "]!" << endl;
+	}
 }
 
 bool updateCurrentOptSolution(const LinearProgram2D * lp, const Constraint2D * bx, const Constraint2D * by, int currConstr, double & currX, double & currY){
@@ -143,7 +152,7 @@ LinearProgramResult solveLinearProgram2D(const LinearProgram2D * lp, double & op
 		currX = M;
 	}
 	else{
-		boundXConstr = new Constraint2D(1.0, 0.0, M, GEQ);
+		boundXConstr = new Constraint2D(1.0, 0.0, -M, GEQ);
 		currX = -M;
 	}
 
@@ -153,7 +162,7 @@ LinearProgramResult solveLinearProgram2D(const LinearProgram2D * lp, double & op
 		currY = M;
 	}
 	else{
-		boundYConstr = new Constraint2D(0.0, 1.0, M, GEQ);
+		boundYConstr = new Constraint2D(0.0, 1.0, -M, GEQ);
 		currY = -M;
 	}
 	opt = lp->getZValue(currX, currY);
